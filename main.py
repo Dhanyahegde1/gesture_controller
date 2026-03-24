@@ -5,8 +5,10 @@ from gesture_recognizer import GestureRecognizer
 from action_handler import ActionHandler
 
 def main():
-    # Start webcam capture
-    cap = cv2.VideoCapture(0)
+    cap        = cv2.VideoCapture(0)
+    detector   = HandDetector()         
+    recognizer = GestureRecognizer()     
+    handler    = ActionHandler()        
 
     """Initialize modules"""
      # detects hand & landmarks

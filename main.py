@@ -1,4 +1,3 @@
-# main.py
 import cv2
 import time
 from hand_detector import HandDetector
@@ -7,9 +6,9 @@ from action_handler import ActionHandler
 
 def main():
     cap        = cv2.VideoCapture(0)
-    detector   = HandDetector()          # teammate's file
-    recognizer = GestureRecognizer()     # teammate's file
-    handler    = ActionHandler()         # YOUR file
+    detector   = HandDetector()         
+    recognizer = GestureRecognizer()     
+    handler    = ActionHandler()        
 
     # --- Display persistence ---
     display_label    = ""
@@ -31,7 +30,7 @@ def main():
 
         # Step 3 — recognise gesture from landmarks
         gesture = recognizer.recognize(landmarks, hand_label) 
-        #print(f"Gesture: {gesture}")  
+        
         # Step 4 — YOUR code: fire the system action
         handler.handle(gesture)
 

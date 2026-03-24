@@ -24,7 +24,7 @@ class HandDetector:
         """
         # MediaPipe requires RGB, OpenCV gives BGR
         rgb_frame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
-        self.results = self.mp_hands.process(rgb_frame)
+        self.results = self.hands.process(rgb_frame)
 
         if self.results.multi_hand_landmarks:
             hand_landmarks = self.results.multi_hand_landmarks[0]  # first hand only
@@ -47,17 +47,21 @@ class HandDetector:
         Returns empty list if no hand is detected.
         """
         landmark_list = []
+        hand_label = "Right"  # default
 
         if self.results.multi_hand_landmarks:
             hand_landmarks = self.results.multi_hand_landmarks[0]
             h, w, _ = frame.shape
 
             for idx, lm in enumerate(hand_landmarks.landmark):
-                # Convert normalized (0-1) coords to actual pixel values
                 cx, cy = int(lm.x * w), int(lm.y * h)
                 landmark_list.append((idx, cx, cy))
 
-        return landmark_list
+            # detect left or right
+            if self.results.multi_handedness:
+                hand_label = self.results.multi_handedness[0].classification[0].label
+
+        return landmark_list, hand_label  # ← now a tuple
 
 
 # ── isolated test ──────────────────────────────────────────────
@@ -73,7 +77,7 @@ if __name__ == "__main__":
             break
 
         frame = detector.find_hands(frame)
-        landmarks = detector.get_landmarks(frame)
+        landmarks, hand_label = detector.get_landmarks(frame)
 
         if landmarks:
             # Print fingertip positions (IDs 4,8,12,16,20)
